@@ -42,8 +42,8 @@ describe('restoreNames', () => {
     ]);
   });
 
-  it(`shouldn't modify objects where`
-    + `the 'firstName' field is not empty`, () => {
+  it(`shouldn't modify objects where the 'firstName'`
+    + `field is not empty`, () => {
     const users = [
       {
         firstName: 'Eve',
@@ -63,8 +63,8 @@ describe('restoreNames', () => {
     ]);
   });
 
-  it(`should work with an array of objects`
-    + `where all 'firstName' fields are undefined`, () => {
+  it(`should work with an array of objects where all 'firstName' fields`
+    + `are undefined`, () => {
     const users = [
       {
         firstName: undefined,
@@ -94,8 +94,8 @@ describe('restoreNames', () => {
     ]);
   });
 
-  it(`should work with an array of objects`
-    + `where some 'firstName' fields are undefined or completely lost`, () => {
+  it(`should work with an array of objects where some 'firstName'`
+    + `fields are undefined or completely lost`, () => {
     const testUsers = [
       {
         firstName: undefined,
@@ -140,6 +140,106 @@ describe('restoreNames', () => {
         firstName: 'Sophia',
         lastName: 'Lee',
         fullName: 'Sophia Lee',
+      },
+    ]);
+  });
+
+  it(`should handle cases where 'firstName' is an empty string`, () => {
+    const users = [
+      {
+        firstName: '',
+        lastName: 'Doe',
+        fullName: 'Alice Doe',
+      },
+    ];
+
+    restoreNames(users);
+
+    expect(users).toEqual([
+      {
+        firstName: 'Alice',
+        lastName: 'Doe',
+        fullName: 'Alice Doe',
+      },
+    ]);
+  });
+
+  it(`should handle 'fullName' with three words`, () => {
+    const users = [
+      {
+        firstName: undefined,
+        lastName: 'Smith',
+        fullName: 'John Michael Smith',
+      },
+    ];
+
+    restoreNames(users);
+
+    expect(users).toEqual([
+      {
+        firstName: 'John',
+        lastName: 'Michael Smith',
+        fullName: 'John Michael Smith',
+      },
+    ]);
+  });
+
+  it(`should handle 'fullName' with special characters`, () => {
+    const users = [
+      {
+        firstName: undefined,
+        lastName: 'Jr.',
+        fullName: "O'Connor Jr.",
+      },
+    ];
+
+    restoreNames(users);
+
+    expect(users).toEqual([
+      {
+        firstName: "O'Connor",
+        lastName: 'Jr.',
+        fullName: "O'Connor Jr.",
+      },
+    ]);
+  });
+
+  it(`should handle 'fullName' with only numbers`, () => {
+    const users = [
+      {
+        firstName: undefined,
+        lastName: '456',
+        fullName: '123 456',
+      },
+    ];
+
+    restoreNames(users);
+
+    expect(users).toEqual([
+      {
+        firstName: '123',
+        lastName: '456',
+        fullName: '123 456',
+      },
+    ]);
+  });
+
+  it(`should handle 'fullName' in Cyrillic`, () => {
+    const users = [
+      {
+        firstName: undefined,
+        lastName: 'Васильович',
+        fullName: 'Петро Васильович',
+      },
+    ];
+
+    restoreNames(users);
+
+    expect(users).toEqual([
+      {
+        firstName: 'Петро',
+        lastName: 'Васильович',
+        fullName: 'Петро Васильович',
       },
     ]);
   });
